@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+
+  dev:
+    image: noiselabs/ghost-dev:latest
+    ports:
+      - "2367:2368"
+    volumes:
+      - ./config/config.development.json:/var/lib/ghost/config.development.json:delegated
+      - ./content:/var/lib/ghost/content:delegated
+    env_file: config/development.env

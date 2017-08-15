@@ -1,0 +1,3 @@
+/content/data/*.db
+/content/logs/*.log*
+/content/themes/casper
