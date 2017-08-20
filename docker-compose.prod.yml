@@ -1,0 +1,18 @@
+version: '3.3'
+
+services:
+  ghost:
+    ports:
+      - "2368:2368"
+    env_file: config/production.env
+    depends_on:
+      - db_prod
+    command: ["/opt/ghost-base/wait-for-it.sh", "--timeout=30", "db_prod:3306", "--strict", "--", "/opt/ghost-base/ghost-start.sh", "prod"]
+  db_prod:
+    image: mysql:8
+    env_file: config/production.env
+    volumes:
+      - ghost-db-prod-data:/var/lib/mysql:delegated
+
+volumes:
+  ghost-db-prod-data:

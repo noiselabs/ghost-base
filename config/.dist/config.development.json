@@ -5,16 +5,23 @@
     "host": "0.0.0.0"
   },
   "database": {
-    "client": "sqlite3",
+    "client": "mysql",
     "connection": {
-      "filename": "/var/lib/ghost/content/data/ghost-local.db"
-    }
+      "host": "db",
+      "database": "ghost_dev",
+      "user": "",
+      "password": ""
+    },
+    "debug": true
   },
   "mail": {
     "transport": "Direct"
   },
   "logging": {
     "level": "trace",
+    "rotation": {
+      "enabled": true
+    },
     "transports": [
       "file",
       "stdout"

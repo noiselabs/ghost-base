@@ -2,17 +2,17 @@
   "url": "http://localhost:2368/",
   "server": {
     "port": 2368,
-    "host": "127.0.0.1"
+    "host": "0.0.0.0"
   },
   "database": {
     "client": "mysql",
     "connection": {
-      "filename": "/var/lib/ghost/content/data/ghost.db",
-      "host": "localhost",
-      "user": "ghost",
-      "password": "ghost",
-      "database": "ghost"
-    }
+      "host": "db",
+      "database": "ghost_prod",
+      "user": "",
+      "password": ""
+    },
+    "debug": false
   },
   "mail": {
     "transport": "Direct"
@@ -27,7 +27,7 @@
       "stdout"
     ]
   },
-  "process": "local",
+  "process": "systemd",
   "paths": {
     "contentPath": "/var/lib/ghost/content"
   }

@@ -1,3 +1,5 @@
-/content/data/*.db
-/content/logs/*.log*
-/content/themes/casper
+/config/*.env
+/config/*.json
+/ghost/data/*.db
+/ghost/logs/*.log*
+/ghost/themes/casper

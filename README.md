@@ -4,60 +4,84 @@ A Dockerized environment ready for developing and deploying Ghost applications.
 
 ![Ghost + Docker logo](docs/ghost-docker.png "Ghost + Docker logo")
 
-## Development environment
+## Configuration
+
+Start by copying the example config provided in the `./config/.dist` folder to `./config/`. Four files are provided:
 
 ```
-ghost-base $ docker-compose up dev
-Creating ghostbase_dev_1 ...
-Creating ghostbase_dev_1 ... done
-Attaching to ghostbase_dev_1
-dev_1   | [2017-08-08 17:58:04] INFO Creating table: posts
-dev_1   | [2017-08-08 17:58:04] INFO Creating table: users
-dev_1   | [2017-08-08 17:58:04] INFO Creating table: roles
-dev_1   | [2017-08-08 17:58:04] INFO Creating table: roles_users
-dev_1   | [2017-08-08 17:58:04] INFO Creating table: permissions
-dev_1   | [2017-08-08 17:58:04] INFO Creating table: permissions_users
-dev_1   | [2017-08-08 17:58:04] INFO Creating table: permissions_roles
-dev_1   | [2017-08-08 17:58:04] INFO Creating table: permissions_apps
-dev_1   | [2017-08-08 17:58:04] INFO Creating table: settings
-dev_1   | [2017-08-08 17:58:04] INFO Creating table: tags
-dev_1   | [2017-08-08 17:58:04] INFO Creating table: posts_tags
-dev_1   | [2017-08-08 17:58:04] INFO Creating table: apps
-dev_1   | [2017-08-08 17:58:04] INFO Creating table: app_settings
-dev_1   | [2017-08-08 17:58:04] INFO Creating table: app_fields
-dev_1   | [2017-08-08 17:58:04] INFO Creating table: clients
-dev_1   | [2017-08-08 17:58:04] INFO Creating table: client_trusted_domains
-dev_1   | [2017-08-08 17:58:04] INFO Creating table: accesstokens
-dev_1   | [2017-08-08 17:58:04] INFO Creating table: refreshtokens
-dev_1   | [2017-08-08 17:58:04] INFO Creating table: subscribers
-dev_1   | [2017-08-08 17:58:04] INFO Creating table: invites
-dev_1   | [2017-08-08 17:58:04] INFO Creating table: brute
-dev_1   | [2017-08-08 17:58:04] INFO Model: Post
-dev_1   | [2017-08-08 17:58:05] INFO Model: Tag
-dev_1   | [2017-08-08 17:58:05] INFO Model: Client
-dev_1   | [2017-08-08 17:58:05] INFO Model: Role
-dev_1   | [2017-08-08 17:58:05] INFO Model: Permission
-dev_1   | [2017-08-08 17:58:05] INFO Model: User
-dev_1   | [2017-08-08 17:58:06] INFO Relation: Role to Permission
-dev_1   | [2017-08-08 17:58:07] INFO Relation: Post to Tag
-dev_1   | [2017-08-08 17:58:07] INFO Relation: User to Role
-dev_1   | [2017-08-08 17:58:07] INFO Finished database migration!
-dev_1   | [nodemon] 1.11.0
-dev_1   | [nodemon] to restart at any time, enter `rs`
-dev_1   | [nodemon] watching: /var/lib/ghost/content/themes/**/*
-dev_1   | [nodemon] starting `node current/index.js`
-dev_1   | [2017-08-08 17:58:13] INFO Ghost is running in development...
-dev_1   | [2017-08-08 17:58:13] INFO Listening on: 0.0.0.0:2368
-dev_1   | [2017-08-08 17:58:13] INFO Url configured as: http://localhost:2368/
-dev_1   | [2017-08-08 17:58:13] INFO Ctrl+C to shut down
-dev_1   | [2017-08-08 17:58:13] INFO Ghost boot 5.415s
+config/.dist
+├── config.development.json
+├── config.production.json
+├── development.env
+└── production.env
+```
+
+You'll need to edit `config/development.env` and `config/production.env` and fill the missing values.
+
+```
+ghost-base $ cp config/.dist/* config/
+
+ghost-base $ vim config/development.env
+MYSQL_DATABASE=ghost_dev
+MYSQL_USER=
+MYSQL_PASSWORD=
+MYSQL_ROOT_PASSWORD=
+NODE_ENV=development
+NPM_CONFIG_LOGLEVEL=debug
+
+ghost-base $ vim config/production.env
+MYSQL_DATABASE=ghost_prod
+MYSQL_USER=
+MYSQL_PASSWORD=
+MYSQL_ROOT_PASSWORD=
+NODE_ENV=production
+NPM_CONFIG_LOGLEVEL=info
+```
+
+> Note: This repo contains a `.gitignore` rule that will make sure that your `config/*.env` and `config/*.json` are not commited to Git as they contain sensitive information (database credentials).
+
+## Ghost Database(s)
+
+For both the development and production environments described below [Docker Volumes](https://docs.docker.com/engine/admin/volumes/volumes/) are used to persist the Ghost database.
+
+Please be aware that stopping your blog with `docker-compose down -v` or by running a cleanup task such as `docker system prune` when your blog is stopped will result in the Docker Volumes above being *removed*. Make sure you backup!
+
+## Development environment
+
+To start your Ghost blog in development mode, using [_nodemon_](https://nodemon.io/) in order to pick up changes automatically, run:
+
+```
+ghost-base $ docker-compose up ghost -d
+```
+
+This development environment is especially useful if you are [making changes to a theme](https://docs.ghost.org/docs/install-local#section-developing-themes).
+
+Your Ghost blog will now be running on [http://localhost:12367/](http://localhost:12367/). Happy hacking.
+
+To stop it do:
+```
+ghost-base $ docker-compose stop ghost
+```
+
+## Production environment
+
+Once you're happy with the changes to your theme it's now time to boot your app in production mode. Start by building the Docker image containing your blog files.
+
+```
+ghost-base $ docker-compose build ghost
+```
+
+Now start Ghost in production mode:
+```
+ghost-base $ docker-compose -f docker-compose.yml -f docker-compose.prod.yml up ghost -d
 ```
 
 Your Ghost blog will now be running on [http://localhost:2367/](http://localhost:2367/). Enjoy.
 
-## Production environment
-
-> Work in progress
+To stop it do:
+```
+ghost-base $ docker-compose -f docker-compose.yml -f docker-compose.prod.yml stop ghost
+```
 
 ## License
 
