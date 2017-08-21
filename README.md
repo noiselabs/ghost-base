@@ -51,7 +51,7 @@ Please be aware that stopping your blog with `docker-compose down -v` or by runn
 To start your Ghost blog in development mode, using [_nodemon_](https://nodemon.io/) in order to pick up changes automatically, run:
 
 ```
-ghost-base $ docker-compose up ghost -d
+ghost-base $ docker-compose up web -d
 ```
 
 This development environment is especially useful if you are [making changes to a theme](https://docs.ghost.org/docs/install-local#section-developing-themes).
@@ -60,7 +60,7 @@ Your Ghost blog will now be running on [http://localhost:12367/](http://localhos
 
 To stop it do:
 ```
-ghost-base $ docker-compose stop ghost
+ghost-base $ docker-compose stop web
 ```
 
 ## Production environment
@@ -80,7 +80,7 @@ Your Ghost blog will now be running on [http://localhost:2367/](http://localhost
 
 To stop it do:
 ```
-ghost-base $ docker-compose -f docker-compose.yml -f docker-compose.prod.yml stop ghost
+ghost-base $ docker-compose -f docker-compose.yml -f docker-compose.prod.yml stop web
 ```
 
 ## License

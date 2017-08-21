@@ -1,9 +1,10 @@
 version: '3.3'
 
 services:
-  ghost:
+  web:
     ports:
-      - "2368:2368"
+      - "2368:80"
+  ghost:
     env_file: config/production.env
     depends_on:
       - db_prod

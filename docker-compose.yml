@@ -1,13 +1,19 @@
 version: '3.3'
 
 services:
+  web:
+   image: nginx
+   depends_on:
+     - ghost
+   volumes:
+     - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+   ports:
+     - "12368:80"
   ghost:
     image: noiselabs/ghost:latest
     build:
       context: .
       dockerfile: docker/ghost/Dockerfile
-    ports:
-      - "12368:2368"
     volumes:
       - ./config/config.development.json:/var/lib/ghost/config.development.json:delegated
       - ./config/config.production.json:/var/lib/ghost/config.production.json:delegated
