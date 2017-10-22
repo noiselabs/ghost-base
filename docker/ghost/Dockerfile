@@ -1,4 +1,4 @@
-FROM ghost:latest
+FROM ghost:1.14
 
 MAINTAINER Vítor Brandão <vitor@noiselabs.io>
 
