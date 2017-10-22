@@ -1,5 +1,9 @@
+.idea
+/build
 /config/*.env
 /config/*.json
 /ghost/data/*.db
+/ghost/data/*.json
+/ghost/images/*
 /ghost/logs/*.log*
-/ghost/themes/casper
+/ghost/themes/*
