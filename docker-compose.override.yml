@@ -1,0 +1,18 @@
+version: '3.3'
+
+services:
+  db_dev:
+    image: mysql:8
+    env_file: config/development.env
+    volumes:
+      - ghost-db-dev-data:/var/lib/mysql:delegated
+  ghost:
+    env_file: config/development.env
+    ports:
+     - "12368:2368"
+    depends_on:
+      - db_dev
+    command: ["/opt/ghost-base/wait-for-it.sh", "--timeout=30", "db_dev:3306", "--strict", "--", "/opt/ghost-base/ghost-start.sh", "dev"]
+
+volumes:
+  ghost-db-dev-data:

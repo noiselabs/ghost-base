@@ -4,6 +4,7 @@
 # Copyright (C) 2017 Vítor Brandão <vitor@noiselabs.io>
 
 import argparse
+import fnmatch
 import os
 import socket
 import subprocess
@@ -26,20 +27,20 @@ def fix_urls(local_address, local_port, live_url, static_dir):
 
     for root, dirs, files in os.walk(static_dir):
         for file in files:
-            if file.endswith('.html') or file.endswith('.rss'):
+            if file.endswith('.html') or file.endswith('.rss') or file.endswith('.txt'):
                 with open(os.path.join(root, file), 'rU+') as f:
                     content = f.read()
                     f.seek(0)
                     f.truncate()
-                    content = content.replace(
-                        'http://%s:%s' % (local_address, local_port), live_url)
-                    content = content.replace(
-                        'rss/index.html', 'rss/index.rss')
+                    content = content.replace('http://%s:%s' % (local_address, local_port), live_url)
                     f.write(content)
+            elif fnmatch.fnmatch(file, '*[?]v=*'):
+                os.rename(os.path.join(root, file), os.path.join(
+                    root, file[:file.find('?')]))
 
 def generate():
     """
-    Blah.
+    Generates static pages from locally running Ghost instance.
     """
     try:
         address = str(os.getenv('GHOST_LOCAL_ADDRESS'))

@@ -1,11 +1,11 @@
-FROM ghost:1.14
+FROM ghost:1.16
 
 MAINTAINER Vítor Brandão <vitor@noiselabs.io>
 
 ENV GHOST_BASE_DATABASE_HOST=db
 
 RUN set -x \
-    && apt-get update && apt-get install -y --no-install-recommends rsync sudo \
+    && apt-get update && apt-get install -y --no-install-recommends build-essential python2.7 rsync sudo \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

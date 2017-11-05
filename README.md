@@ -51,16 +51,16 @@ Please be aware that stopping your blog with `docker-compose down -v` or by runn
 To start your Ghost blog in development mode, using [_nodemon_](https://nodemon.io/) in order to pick up changes automatically, run:
 
 ```
-ghost-base $ docker-compose up web -d
+ghost-base $ docker-compose up ghost -d
 ```
 
 This development environment is especially useful if you are [making changes to a theme](https://docs.ghost.org/docs/install-local#section-developing-themes).
 
-Your Ghost blog will now be running on [http://localhost:12367/](http://localhost:12367/). Happy hacking.
+Your Ghost blog will now be running on [http://localhost:12368/](http://localhost:12368/). Happy hacking.
 
 To stop it do:
 ```
-ghost-base $ docker-compose stop web
+ghost-base $ docker-compose stop ghost
 ```
 
 ## Production environment
@@ -71,7 +71,7 @@ Once you're happy with the changes to your theme it's now time to boot your app 
 ghost-base $ docker-compose build ghost
 ```
 
-Now start Ghost in production mode:
+Now start Ghost in production mode and use Nginx (`web`) as reverse proxy:
 ```
 ghost-base $ docker-compose -f docker-compose.yml -f docker-compose.prod.yml up ghost -d
 ```
@@ -83,6 +83,31 @@ To stop it do:
 ghost-base $ docker-compose -f docker-compose.yml -f docker-compose.prod.yml stop web
 ```
 
+## Bonus: Generate static content using Buster
+
+By using [Buster](https://github.com/axitkhurana/buster) we can generate static content from a running Ghost instance and serve these files directly using something like [GitHub Pages](https://pages.github.com/).
+
+To generate static files and store them in `build/buster` do:
+
+```
+ghost-base $ docker-compose -f docker-compose.yml -f docker-compose.prod.yml run --rm buster generate
+```
+
+To preview your static website locally before pushing to GitHub Pages start the `live` service:
+
+
+```
+ghost-base $ docker-compose up live
+```
+
+and browse the website at [http://localhost:80](http://localhost:80).
+
+## Development vs Production databases
+
+As you can see in our `docker-compose*.yml` files we are using two data volumes, separating development and production databases. This allows you to make changes while testing the blog without affecting production data.
+
+ However, if you prefer, you can combine `*dev` and `*prod` services and data volumes into a single `db` service and data volume sharing the same data for development and production. Make sure you also adjust the database name in the `config/*.env` files.
+ 
 ## License
 
 This project is licensed under the [MIT License](LICENSE).

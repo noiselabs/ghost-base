@@ -5,12 +5,8 @@ services:
     image: noiselabs/buster
     build: docker/buster
     volumes:
-      - ./build:/var/tmp/buster:delegated
-  db_dev:
-    image: mysql:8
-    env_file: config/development.env
-    volumes:
-      - ghost-db-dev-data:/var/lib/mysql:delegated
+      - ./build/buster:/var/tmp/buster:delegated
+      - ./docker/buster/entrypoint.py:/usr/local/bin/entrypoint.py:delegated
   ghost:
     image: noiselabs/ghost
     build:
@@ -21,18 +17,15 @@ services:
       - ./config/config.production.json:/var/lib/ghost/config.production.json:delegated
       - ./ghost:/var/lib/ghost/content:delegated
       - ./docker/bin:/opt/ghost-base:delegated
-    env_file: config/development.env
-    depends_on:
-      - db_dev
-    command: ["/opt/ghost-base/wait-for-it.sh", "--timeout=30", "db_dev:3306", "--strict", "--", "/opt/ghost-base/ghost-start.sh", "dev"]
+  live:
+    image: nginx
+    volumes:
+      - ./build/buster:/usr/share/nginx/html:delegated
+    ports:
+       - "80:80"
   web:
    image: nginx
    depends_on:
      - ghost
    volumes:
      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
-   ports:
-     - "12368:80"
-
-volumes:
-  ghost-db-dev-data:
